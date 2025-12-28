@@ -1,0 +1,18 @@
+{
+  "api": {
+    "pageLimit": 5,
+    "timeoutsMs": 8000
+  },
+  "cache": {
+    "useLocalCache": false,
+    "patientsFilePath": "./data/patients.json",
+    "analysisFilePath": "./data/analysis.json",
+    "rulesFilePath": "./data/rules.json"
+  },
+  "retry": {
+    "maxRetries": 4,
+    "baseDelayMs": 500,
+    "maxDelayMs": 4000,
+    "jitterRatio": 0.3
+  }
+}

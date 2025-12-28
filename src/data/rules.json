@@ -1,0 +1,84 @@
+{
+  "version": "v1",
+  "thresholds": {
+    "highRiskTotalScoreMinInclusive": 4,
+    "feverTempMinInclusive": 99.6
+  },
+  "metrics": [
+    {
+      "id": "bloodPressure",
+      "label": "Blood Pressure",
+      "fields": ["blood_pressure"],
+      "parserId": "bpSlashParser",
+      "scorerId": "bpCategoryMaxScorer",
+      "rules": [
+        {
+          "state": "normal",
+          "points": 0,
+          "logic": "AND",
+          "rule": {
+            "systolic": { "maxExclusive": 120 },
+            "diastolic": { "maxExclusive": 80 }
+          }
+        },
+        {
+          "state": "elevated",
+          "points": 1,
+          "logic": "AND",
+          "rule": {
+            "systolic": { "minInclusive": 120, "maxInclusive": 129 },
+            "diastolic": { "maxExclusive": 80 }
+          }
+        },
+        {
+          "state": "stage1",
+          "points": 2,
+          "logic": "OR",
+          "rule": {
+            "systolic": { "minInclusive": 130, "maxInclusive": 139 },
+            "diastolic": { "minInclusive": 80, "maxInclusive": 89 }
+          }
+        },
+        {
+          "state": "stage2",
+          "points": 3,
+          "logic": "OR",
+          "rule": {
+            "systolic": { "minInclusive": 140 },
+            "diastolic": { "minInclusive": 90 }
+          }
+        }
+      ],
+      "invalidPoints": 0,
+      "invalidCountsAsQualityIssue": true
+    },
+    {
+      "id": "temperature",
+      "label": "Temperature",
+      "fields": ["temperature"],
+      "parserId": "numberLenient",
+      "scorerId": "singleFieldRangeFirstMatch",
+      "rules": [
+        { "state": "normal", "points": 0, "rule": { "temperature": { "maxInclusive": 99.5 } } },
+        { "state": "low_fever", "points": 1, "rule": { "temperature": { "minInclusive": 99.6, "maxInclusive": 100.9 } } },
+        { "state": "high_fever", "points": 2, "rule": { "temperature": { "minInclusive": 101.0 } } }
+      ],
+      "invalidPoints": 0,
+      "invalidCountsAsQualityIssue": true
+    },
+    {
+      "id": "age",
+      "label": "Age",
+      "fields": ["age"],
+      "parserId": "numberLenient",
+      "scorerId": "singleFieldRangeFirstMatch",
+      "rules": [
+        { "state": "under_40", "points": 0, "rule": { "age": { "maxExclusive": 40 } } },
+        { "state": "between_40_and_65", "points": 1, "rule": { "age": { "minInclusive": 40, "maxInclusive": 65 } } },
+        { "state": "over_65", "points": 2, "rule": { "age": { "minExclusive": 65 } } }
+      ],
+      "invalidPoints": 0,
+      "invalidCountsAsQualityIssue": true
+    }
+  ]
+}

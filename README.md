@@ -1,36 +1,79 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Patient Risk Assessment App
 
-## Getting Started
+A full-stack web application built with **Next.js (App Router)** and **React** that fetches patient data from an external API, analyzes risk on the backend, and presents results in a clean, paginated UI.
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## Features
+
+- **Paginated patient table**
+    - Server-side pagination
+    - Skeleton loaders for a snappy UX
+- **Backend-only risk analysis**
+    - Configurable rule engine (JSON-driven)
+    - No calculations in the frontend
+- **Data caching**
+    - Patient data and analysis stored as local JSON files
+    - Toggle cache usage via environment/config
+- **Robust API handling**
+    - Retries for transient failures (429 / 5xx)
+    - Handles inconsistent response shapes and missing fields
+- **Assessment submission**
+    - Hard-blocked until analysis exists
+    - Typed confirmation required
+    - Submits only backend-generated results
+
+---
+
+## Tech Stack
+
+- **Frontend:** Next.js, React, Tailwind CSS
+- **Backend:** Next.js API routes
+- **HTTP:** Axios with retry & backoff
+- **Storage:** Local JSON files (no database)
+
+---
+
+## Environment Variables
+
+Create a `.env.local` file:
+
+```env
+API_BASE_URL=https://example.com/api
+API_KEY=your-api-key-here
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+> These variables are **server-only** and are never exposed to the browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Scripts
 
-## Learn More
+```bash
+npm install
+npm run dev
+```
 
-To learn more about Next.js, take a look at the following resources:
+The app will be available at `http://localhost:3000`.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## High-Level Flow
 
-## Deploy on Vercel
+1. App loads first page of patients
+2. User paginates → backend fetches pages on demand
+3. User clicks **Start Analysis**
+    - Backend fetches all pages (if not cached)
+    - Runs rule-based risk analysis
+    - Saves results to JSON
+4. User reviews results and submits assessment
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Notes
+
+- All business logic lives on the server
+- Rules and thresholds are fully configurable via JSON
+- Designed for clarity, correctness, and assessment safety
+
+---
